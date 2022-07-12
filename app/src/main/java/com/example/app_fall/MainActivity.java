@@ -1,21 +1,17 @@
 package com.example.app_fall;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 
 import android.app.Activity;
-import android.content.Context;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -25,13 +21,12 @@ import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.location.LocationRequest;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Vibrator;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -42,17 +37,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.app_fall.ml.FallDetectionModel;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.internal.location.zzz;
+
+import com.example.app_fall.ml.FallModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -83,16 +71,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     AlertDialog.Builder builder;
     private AlertDialog alertDialog;
     private Vibrator vibrate;
-    private Switch sw;
+    private Switch sw1,sw2,sw3;
     private Timer timer;
     private Handler handler;
     private Activity context;
+    private static boolean fall;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O_MR1) {
@@ -109,28 +99,32 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
 
-        /* locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(2000); */
 
-        //FusedLocationProviderClient fusedLocationProviderClient ;
-        //fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
 
-        sw = findViewById(R.id.switch1);
+        sw1 = findViewById(R.id.switch1);
+        sw2 = findViewById(R.id.switch2);
+        sw3 = findViewById(R.id.switch3);
         bt = findViewById(R.id.button);
         tv1 = findViewById(R.id.txt1);
+
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,ContactActivity.class);
+                startActivity(intent);
+            }
+        });
         SharedPreferences sharedPreferences = getSharedPreferences("Save", MODE_PRIVATE);
-        sw.setChecked(sharedPreferences.getBoolean("value", false));
-        sw.setOnClickListener(new View.OnClickListener() {
+        sw1.setChecked(sharedPreferences.getBoolean("value", false));
+        sw1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M) {
                     if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-                        if (sw.isChecked()){
+                        if (sw1.isChecked()){
                             sensorManager.registerListener(MainActivity.this, sensor,sensorManager.SENSOR_DELAY_NORMAL);
 
                         }
@@ -141,10 +135,67 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     }
 
                 } else {
-                    requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 1);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 1);
+                    }
                 }
 
             } }) ;
+
+
+        sw2.setChecked(sharedPreferences.getBoolean("value", false));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                sw2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if (sw2.isChecked()){
+                           tv1.setText("vibratorOn");
+
+
+
+
+
+                        }
+                        else{
+                            tv1.setText("vibratorOff");
+
+                        }
+
+                    }
+
+
+
+                } ) ; }
+            else{
+                requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 1);
+            }
+        }
+
+        MediaPlayer player ;
+        player = MediaPlayer.create(this,R.raw.ringtone);
+        sw3.setChecked(sharedPreferences.getBoolean("value", false));
+        sw3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                if (sw3.isChecked()){
+                    tv1.setText("RingtoneOn");
+
+                }
+                else{
+                    tv1.setText("RingtoneOff");
+                }
+
+
+
+            }
+
+
+
+        } ) ;
 
 
 
@@ -160,9 +211,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             accZ = sensorEvent.values[2];
             Log.d(TAG, accX + " " + accY + " " + accZ);
             for(int i = 0; i<1201; i+=3){
-            values[i] = (float) (accX*26.12);
-            values[i+1] = (float) (accY*26.12);
-            values[2 + i] = (float) (accZ*26.12);}
+            values[i] =  accX;
+            values[i+1] = accY;
+            values[i+2] = accZ;}
 
             RunModel(values);
             break;
@@ -172,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void RunModel(float[] values) {
         try {
-            FallDetectionModel model = FallDetectionModel.newInstance(MainActivity.this);
+            FallModel model = FallModel.newInstance(MainActivity.this);
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * 401 * 3);
 
             byteBuffer.order(ByteOrder.nativeOrder());
@@ -186,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             inputFeature0.loadBuffer(byteBuffer);
 
             // Runs model inference and gets result.
-            FallDetectionModel.Outputs outputs = model.process(inputFeature0);
+            FallModel.Outputs outputs = model.process(inputFeature0);
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
             // Releases model resources if no longer used.
@@ -204,8 +255,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
                 t.setText(String.valueOf(output[0])+" Fall");
+
                 AlertSet();
+                isAlertset();
                 sensorManager.unregisterListener(this);
+                startactivity();
+
 
 
 
@@ -220,20 +275,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
+
+
     @SuppressLint("HandlerLeak")
     private void AlertSet() {
+        MediaPlayer player ;
+        player = MediaPlayer.create(this,R.raw.ringtone);
+        //isAlertset();
+        vibrate = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        Timer timer = new Timer();
+        if (sw2.isChecked()){
+            setVibrate();
+        }else //vibrate.cancel();
+        if (sw3.isChecked()){
+            addRingtone(player);
+        }else stopRingtone(player);
 
 
         builder = new AlertDialog.Builder(this);
-        vibrate = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        Timer timer = new Timer();
-
-
-        long[] pattern ={100,500,100,500};
-        vibrate.vibrate(pattern,2);
         builder.setTitle("FALL DETECTED!");
         builder.setCancelable(false);
-
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener(){
 
             @Override
@@ -245,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                         vibrate.cancel();
                         timer.cancel();
+                        stopRingtone(player);
                         getLocation();
                     }
                 }
@@ -259,17 +321,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 dialogInterface.cancel();
                 vibrate.cancel();
                 timer.cancel();
+                stopRingtone(player);
+
                 sensorManager.registerListener(MainActivity.this, sensor,sensorManager.SENSOR_DELAY_NORMAL);
 
 
             }
         });
         final AlertDialog alertDialog=builder.create();
-
-
-
         TimerTask timerTask = new TimerTask() {
-            int countTime = 20;
+            int countTime = 45;
             @Override
             public void run() {
                 if (countTime > 0){
@@ -285,6 +346,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     timer.cancel();
                     alertDialog.cancel();
                     vibrate.cancel();
+                    stopRingtone(player);
 
                     //sensorManager.unregisterListener(MainActivity.this);
 
@@ -299,13 +361,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         };
         //timerTask.cancel();
         timer.schedule(timerTask, 100, 1000);
-
-
-
-
-
-        //countDown();
-
         alertDialog.show();
 
 
@@ -362,7 +417,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
-            int countTime = 30;
+            int countTime = 45;
             @Override
             public void run() {
                 if (countTime > 0){
@@ -380,10 +435,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-    private void startActivity(){
+    private void startactivity(){
         Intent intent = new Intent(MainActivity.this,MainActivity.class);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        startActivity(intent);
 
 
     }
@@ -407,6 +464,54 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
     }
+
+
+
+    public void addRingtone(MediaPlayer player){
+
+            if (player == null){
+                player = MediaPlayer.create(this,R.raw.ringtone);
+            }
+            player.start();
+
+
+
+
+    }
+
+    public void stopRingtone(MediaPlayer player){
+
+            if (player != null){
+                player.release();}
+
+
+            player=null;
+
+
+    }
+
+    public void setVibrate(){
+
+        long[] pattern = {100, 500, 100, 500};
+        vibrate = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        vibrate.vibrate(pattern, 2);
+
+
+
+
+    }
+
+    public boolean isAlertset(){
+
+        fall=true;
+        return fall;
+
+
+    }
+
+
+
+
 
 
     @Override
