@@ -9,7 +9,9 @@ import android.app.Activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,9 +32,13 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,14 +60,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import android.database.Cursor;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener  {
 
     private SensorManager sensorManager;
-
+    public Adapter mAdapter;
     private LocationRequest locationRequest;
     private Sensor sensor;
-    private TextView tv,tv1;
+    private TextView tv,tv1,tv2;
     private Button bt;
     private  float accX;
     private  float accY;
@@ -76,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Handler handler;
     private Activity context;
     private static boolean fall;
+    private Dbhelper Dbhelper;
+    ContentValues Values;
 
 
     @Override
@@ -109,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sw3 = findViewById(R.id.switch3);
         bt = findViewById(R.id.button);
         tv1 = findViewById(R.id.txt1);
+        tv2 = findViewById(R.id.txt4);
+
 
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,14 +217,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         boolean run = true;
 
         do{
-            accX = sensorEvent.values[0];
-            accY = sensorEvent.values[1];
-            accZ = sensorEvent.values[2];
+
             Log.d(TAG, accX + " " + accY + " " + accZ);
             for(int i = 0; i<1201; i+=3){
-            values[i] =  accX;
-            values[i+1] = accY;
-            values[i+2] = accZ;}
+                accX = sensorEvent.values[0];
+                accY = sensorEvent.values[1];
+                accZ = sensorEvent.values[2];
+                values[i] =  accX;
+                values[i+1] = accY;
+                values[i+2] = accZ;}
 
             RunModel(values);
             break;
@@ -286,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Timer timer = new Timer();
         if (sw2.isChecked()){
             setVibrate();
-        }else //vibrate.cancel();
+        }else vibrate.cancel();
         if (sw3.isChecked()){
             addRingtone(player);
         }else stopRingtone(player);
@@ -455,8 +467,43 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //SmsManager smsManager = SmsManager.getDefault();
             StringBuffer smsBody = new StringBuffer();
             smsBody.append(Uri.parse(message));
-            smsManager.sendTextMessage("+21650771430".trim(),null,smsBody.toString(),null,null);
-            Toast.makeText(this,"Message is sent!",Toast.LENGTH_SHORT).show();
+
+            mAdapter = new Adapter(this, null);
+
+            Dbhelper = new Dbhelper(this);
+            Cursor cursor= Dbhelper.getphone();
+            StringBuilder phone = new StringBuilder();
+
+            Cursor cursor1=Dbhelper.dbEmpty();
+            StringBuilder table_empty = new StringBuilder();
+            while (cursor1.moveToNext())
+            {
+                table_empty.append(cursor1.getInt(0));
+            }
+            int size=Integer.valueOf(String.valueOf(table_empty));
+            if (size == 0){
+                Toast.makeText(this,"Put CareTaker First!",Toast.LENGTH_SHORT).show();
+            }
+            else {
+                for (int i=0;i<size;i++){
+                    while (cursor.moveToNext())
+                    {
+                        phone.append(cursor.getInt(i));
+                    }
+
+                    smsManager.sendTextMessage("+216"+String.valueOf(phone).trim(),null,smsBody.toString(),null,null);
+                    Toast.makeText(this,"Message is sent!",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+
+
+
+
+            tv2 = findViewById(R.id.txt4);
+            tv2.setText(String.valueOf(table_empty));
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -508,8 +555,50 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menumain, menu);
+        return true;
 
+    }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // because we want to hide delete option when we are adding a new contact
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem item = (MenuItem) menu.findItem(R.id.setting);
+        MenuItem item1 = (MenuItem) menu.findItem(R.id.about);
+        MenuItem item2 = (MenuItem) menu.findItem(R.id.logout);
+        item.setVisible(false);
+        //item1.setVisible(false);
+        //item2.setVisible(false);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_contact:
+                Intent intent = new Intent(MainActivity.this,ContactActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.logout:
+                Intent intent2 = new Intent(MainActivity.this,LoginActivity.class);
+                startActivity(intent2);
+                return true;
+            case R.id.about:
+                Intent intent3 = new Intent(MainActivity.this,AboutActivity.class);
+                startActivity(intent3);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
 

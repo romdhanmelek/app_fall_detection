@@ -76,7 +76,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         } else {
             setTitle("Edit a Contact");
-            //getLoaderManager().initLoader(LOADER, null, this);
+            getLoaderManager().initLoader(LOADER, null, this);
 
         }
 

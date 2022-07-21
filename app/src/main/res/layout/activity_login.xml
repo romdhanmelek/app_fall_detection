@@ -28,7 +28,7 @@
         android:textColor="@color/white"
         android:layout_margin="10dp"
         android:padding="20dp"
-        android:drawableLeft="@drawable/ic_baseline_person_24"
+        android:drawableLeft="@drawable/person"
         android:drawablePadding="20dp"/>
 
     <EditText

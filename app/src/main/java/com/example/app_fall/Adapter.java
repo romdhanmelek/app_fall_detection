@@ -56,4 +56,5 @@ public class Adapter extends CursorAdapter {
 
     }
 
+
 }

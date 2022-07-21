@@ -38,6 +38,14 @@ public class ContactActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent);
             }
         });
+        FloatingActionButton home = findViewById(R.id.home);
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ContactActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         ListView listView = findViewById(R.id.list);
         mAdapter = new Adapter(this, null);
@@ -56,7 +64,7 @@ public class ContactActivity extends AppCompatActivity implements LoaderManager.
         });
 
         // get the loader running
-        //getLoaderManager().initLoader(CONTACTLOADER, null, this);
+        getLoaderManager().initLoader(CONTACTLOADER, null, this);
     }
 
     @Override

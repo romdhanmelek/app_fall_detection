@@ -1,6 +1,7 @@
 package com.example.app_fall;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -35,5 +36,16 @@ public class Dbhelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public Cursor getphone(){
+        SQLiteDatabase db= this.getReadableDatabase();
+        Cursor cursor= db.rawQuery(" Select "+ContactEntry.COLUMN_PHONENUMBER + " from "+ContactEntry.TABLE_NAME,null,null);
+        return cursor;
+    }
+    public Cursor dbEmpty(){
+        SQLiteDatabase db= this.getReadableDatabase();
+        Cursor cursor= db.rawQuery( " SELECT count(*) FROM " +ContactEntry.TABLE_NAME ,null,null);
+        return cursor;
     }
 }

@@ -212,6 +212,7 @@ public class Provider extends ContentProvider {
             return 0;
         }
 
+
         SQLiteDatabase database = mDbhelper.getWritableDatabase();
         int rowsUpdated = database.update(Contract.ContactEntry.TABLE_NAME, values, selection, selectionArgs);
         if (rowsUpdated!=0) {
