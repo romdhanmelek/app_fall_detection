@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ContactActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -24,11 +25,42 @@ public class ContactActivity extends AppCompatActivity implements LoaderManager.
     public Adapter mAdapter;
     public static final  int CONTACTLOADER = 0;
 
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
+
+        bottomNavigationView=findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.action_contact);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+
+
+                case R.id.home:
+                    Intent intent2 = new Intent(ContactActivity.this,MainActivity.class);
+                    startActivity(intent2);
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.about:
+                    Intent intent3 = new Intent(ContactActivity.this,AboutActivity.class);
+                    startActivity(intent3);
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.setting1:
+                    Intent intent4 = new Intent(ContactActivity.this,SettingsActivity.class);
+
+                    startActivity(intent4);
+
+                    overridePendingTransition(0,0);
+                    return true;
+            }
+
+            return super.onOptionsItemSelected(item);
+
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -38,14 +70,7 @@ public class ContactActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent);
             }
         });
-        FloatingActionButton home = findViewById(R.id.home);
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ContactActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
         ListView listView = findViewById(R.id.list);
         mAdapter = new Adapter(this, null);
@@ -99,3 +124,4 @@ public class ContactActivity extends AppCompatActivity implements LoaderManager.
 
     }
 }
+

@@ -9,7 +9,7 @@ import com.example.app_fall.Contract.ContactEntry;
 
 public class Dbhelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "todaycontact.db";
+    public static final String DATABASE_NAME = "mycontacts.db";
     public static final int DATABASE_VERSION = 1;
 
 

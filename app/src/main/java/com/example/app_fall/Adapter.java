@@ -53,7 +53,6 @@ public class Adapter extends CursorAdapter {
         mContactImageView.setImageURI(imageUri);
 
 
-
     }
 
 

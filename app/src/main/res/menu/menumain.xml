@@ -3,25 +3,27 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        app:showAsAction="always"
+        android:enabled="true"
+        android:title="Home"
+        android:id="@+id/home"
+        android:icon="@drawable/home2"/>
+    <item
+        android:enabled="true"
         android:id="@+id/action_contact"
         android:icon="@drawable/person"
         android:title="contact" />
 
     <item
-        app:showAsAction="never"
-        android:id="@+id/setting"
-        android:icon="@drawable/done"
+        android:enabled="true"
+        android:id="@+id/setting1"
+        android:icon="@drawable/setting"
         android:title="Setting" />
     <item
-        app:showAsAction="never"
+        android:enabled="true"
         android:id="@+id/about"
-        android:icon="@drawable/done"
+        android:icon="@drawable/ic_baseline_info_24"
         android:title="About App" />
 
-    <item
-        app:showAsAction="never"
-        android:title="LogOut"
-        android:id="@+id/logout"/>
+
 
 </menu>

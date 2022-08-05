@@ -6,19 +6,28 @@
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.1" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.1" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/drawable/ic_baseline_person_add_24.xml" value="0.1495" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/drawable/person.xml" value="0.1" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/drawable/photo.xml" value="0.1" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/drawable/selector.xml" value="0.1595" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/drawable/setting.xml" value="0.1595" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/about_activity.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/activity_contact.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/activity_contact.xml" value="0.264" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/activity_editor.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/activity_login.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/activity_maps.xml" value="0.21510416666666668" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/activity_settings.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/item_contact.xml" value="0.253125" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/listitem.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/layout/login_activity.xml" value="0.21875" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/menu/menueditor.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/menu/menulogout.xml" value="0.253125" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/menu/menumain.xml" value="0.253125" />
         <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/xml/line_point_formatter_with_labels.xml" value="0.1" />
+        <entry key="..\:/Users/lenovo/Desktop/Rapport PFE/app_fall/app/src/main/res/xml/line_point_formatter_with_labels_2.xml" value="0.1" />
       </map>
     </option>
   </component>

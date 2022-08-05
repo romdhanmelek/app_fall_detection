@@ -44,16 +44,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     Spinner mSpinner;
     public static final int LOADER = 0;
 
-    private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            mContactHasChanged = true;
-            return false;
-        }
-    };
-
-    boolean hasAllRequiredValues = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +88,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
 
     }
+
+    private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            mContactHasChanged = true;
+            return false;
+        }
+    };
+
+    boolean hasAllRequiredValues = false;
+
+
 
     private void setUpSpinner() {
 
