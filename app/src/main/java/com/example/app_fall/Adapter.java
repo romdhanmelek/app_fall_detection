@@ -45,7 +45,6 @@ public class Adapter extends CursorAdapter {
         String contactpicture = cursor.getString(picture);
         String typeof = cursor.getString(type);
         Uri imageUri = Uri.parse(contactpicture);
-
         nameView.setText(contactname);
         numberView.setText(contactnumber);
         typeofContactView.setText(typeof);

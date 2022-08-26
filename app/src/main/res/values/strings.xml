@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">app_fall</string>
+    <string name="app_name">Elderly Fall Detect</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="button">Button</string>
     <string name="Contact" />

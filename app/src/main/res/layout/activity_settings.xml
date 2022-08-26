@@ -10,45 +10,35 @@
 
 
     <Switch
-        android:id="@+id/switch1"
-        android:layout_width="111dp"
-        android:layout_height="48dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="231dp"
-        android:layout_marginTop="414dp"
-        android:text="Sensor"
-        android:textOff="off"
-        android:textOn="on"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-    <Switch
         android:id="@+id/switch2"
-        android:layout_width="111dp"
-        android:layout_height="48dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="199dp"
-        android:layout_marginTop="306dp"
+        android:layout_width="127dp"
+        android:layout_height="42dp"
+        android:layout_above="@+id/switch3"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="76dp"
+        android:layout_marginBottom="17dp"
         android:text="Vibrator"
         android:textOff="off"
         android:textOn="on"
+        android:textSize="16sp"
+        android:textStyle="bold"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <Switch
         android:id="@+id/switch3"
-        android:layout_width="111dp"
-        android:layout_height="48dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="86dp"
-        android:layout_marginTop="495dp"
+        android:layout_width="126dp"
+        android:layout_height="46dp"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="76dp"
+        android:layout_marginBottom="68dp"
         android:text="Ringtone"
         android:textOff="off"
         android:textOn="on"
+        android:textSize="16sp"
+        android:textStyle="bold"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -58,8 +48,51 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:background="@color/purple_500"
-        app:itemTextColor="@drawable/selector"
+        app:itemBackground="@color/white"
         app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
         app:menu="@menu/menumain" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="346dp"
+        android:layout_height="250dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        app:srcCompat="@drawable/fall" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="41dp"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="105dp"
+        android:layout_marginBottom="214dp"
+        app:srcCompat="@drawable/vibration" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="41dp"
+        android:layout_height="34dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="105dp"
+        android:layout_marginBottom="131dp"
+        app:srcCompat="@drawable/ring" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@+id/imageView2"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="21dp"
+        android:text="The vibration and the alarm sound can be added to the app when a fall occurs "
+        android:textAlignment="center"
+        android:textSize="16sp" />
 
 </RelativeLayout>

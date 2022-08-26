@@ -17,6 +17,7 @@ import android.content.Intent;
 
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 
@@ -56,6 +57,7 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.example.app_fall.ml.FallModel;
+import com.example.app_fall.ml.FallModel1;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.SleepClassifyEvent;
@@ -97,17 +99,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private AlertDialog alertDialog;
     private Vibrator vibrate;
     private GraphView graph;
-
+    private long lastAccelTime = 0;
     private Timer timer;
     private Handler handler;
     private int count=1;
-    private int i=0;
+    private int i=0,j=0;
     private Viewport viewport;
-
+    public boolean starting=true;
     private Dbhelper Dbhelper;
 
     private BottomNavigationView bottomNavigationView;
-    LineGraphSeries<DataPoint> seriesX = new LineGraphSeries<DataPoint>(new DataPoint[] {
+    /*LineGraphSeries<DataPoint> seriesX = new LineGraphSeries<DataPoint>(new DataPoint[] {
             new DataPoint(0, 0),
 
 
@@ -121,13 +123,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             new DataPoint(0, 0),
 
 
-    });
+    });*/
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.purple2)));
 
 
 
@@ -153,8 +156,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         bt = findViewById(R.id.button);
         bt1 = findViewById(R.id.button_call);
-        tv1 = findViewById(R.id.txt1);
-        tv2 = findViewById(R.id.txt4);
+        tv1 = findViewById(R.id.textView1);
+        //tv2 = findViewById(R.id.txt4);
         bottomNavigationView=findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.home);
 
@@ -196,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (ActivityCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
 
                 }else{
-                    callEmergence();
+                    callEmergence(view);
                 }
 
 
@@ -210,13 +213,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (SettingsActivity.sw1checked()){
-                    sensorManager.registerListener(MainActivity.this, sensor,SensorManager.SENSOR_DELAY_NORMAL);
-                    Toast.makeText(MainActivity.this,"Sensor On",Toast.LENGTH_SHORT).show();
+                if (j==0){
+                    sensorManager.registerListener(MainActivity.this, sensor,SensorManager.SENSOR_DELAY_FASTEST);
+                    Toast.makeText(MainActivity.this,"Sensor ON",Toast.LENGTH_SHORT).show();
+                    bt.setText("Pause Detection");
+                    tv1.setText("Detection is ON");
+                    j++;
+
 
                 }
                 else{
                     sensorManager.unregisterListener(MainActivity.this);
+                    Toast.makeText(MainActivity.this,"Sensor OFF",Toast.LENGTH_SHORT).show();
+
+                    bt.setText("Resume Detection");
+                    tv1.setText("Detection is OFF");
+                    j=0;
                 }
             }
         });
@@ -246,75 +258,69 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        bottomNavigationView.setSelectedItemId(R.id.home);
+    }
+
+
+
+    @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-       try {
+
             accX = sensorEvent.values[0];
             accY = sensorEvent.values[1];
             accZ = sensorEvent.values[2];
-            Thread.currentThread().sleep(20);
+            //Thread.currentThread().sleep(20);
 
-            count ++;
-            if (count >1000){
-                count = 1;
-                seriesX.resetData(new DataPoint[]{new DataPoint(1,0)});
-                seriesY.resetData(new DataPoint[]{new DataPoint(1,0)});
-                seriesZ.resetData(new DataPoint[]{new DataPoint(1,0)});
+           /*count ++;
+           if (count >1000){
+               count = 1;
+               seriesX.resetData(new DataPoint[]{new DataPoint(1,0)});
+               seriesY.resetData(new DataPoint[]{new DataPoint(1,0)});
+               seriesZ.resetData(new DataPoint[]{new DataPoint(1,0)});
+           }
+           GraphView graph = (GraphView) findViewById(R.id.graph);
+           graph.setVisibility(View.VISIBLE);
+           seriesX.appendData(new DataPoint(count, accX),true,count);
+           seriesY.appendData(new DataPoint(count, accY),true,count);
+           seriesZ.appendData(new DataPoint(count, accZ),true,count);
+           seriesY.setColor(Color.GREEN);
+           seriesZ.setColor(Color.RED);
+           seriesX.setTitle("X axe");
+           seriesY.setTitle("Y axe");
+           seriesZ.setTitle("Z axe");
+           viewport = graph.getViewport();
+           viewport.setScrollable(true);
+           viewport.setXAxisBoundsManual(true);
+           viewport.setMaxX(count);
+
+           viewport.setMinX(count-100);
+           graph.addSeries(seriesX);
+           graph.addSeries(seriesY);
+           graph.addSeries(seriesZ);*/
+
+
+
+
+
+
+
+
+        //if (System.currentTimeMillis()-lastAccelTime >= 5) {  //5ms pour avoir f=200Hz
+            //lastAccelTime = System.currentTimeMillis();
+
+            values[i] = accX;
+            values[i + 1] = accY;
+            values[i + 2] = accZ;
+            i += 3;
+            if (i >= 1202) {
+                i = 0;
+                RunModel(values);
             }
-            GraphView graph = (GraphView) findViewById(R.id.graph);
-            graph.setVisibility(View.VISIBLE);
-            seriesX.appendData(new DataPoint(count, accX),true,count);
-            seriesY.appendData(new DataPoint(count, accY),true,count);
-            seriesZ.appendData(new DataPoint(count, accZ),true,count);
-            seriesY.setColor(Color.GREEN);
-            seriesZ.setColor(Color.RED);
-            seriesX.setTitle("X axe");
-            seriesY.setTitle("Y axe");
-            seriesZ.setTitle("Z axe");
-            viewport = graph.getViewport();
-            viewport.setScrollable(true);
-            viewport.setXAxisBoundsManual(true);
-            viewport.setMaxX(count);
+    //}
 
-            viewport.setMinX(count-100);
-            graph.addSeries(seriesX);
-            graph.addSeries(seriesY);
-            graph.addSeries(seriesZ);
-
-
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-       if (i>1203){
-           i=0;
-
-           for(int j=0;i<1203;j++)
-               values[j]=0;
-       }
-        values[i] = accX;
-        values[i + 1] = accY;
-        values[i + 2] = accZ;
-        i+=3;
-        RunModel(values);
-
-
-
-
-               //i+=3;
-
-
-
-
-
-            //}
-
-
-            //break;
 
 
 
@@ -323,47 +329,39 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void RunModel(float[] values) {
         try {
-            FallModel model = FallModel.newInstance(MainActivity.this);
+            FallModel1 model = FallModel1.newInstance(MainActivity.this);
             ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * 401 * 3);
 
             byteBuffer.order(ByteOrder.nativeOrder());
-            for (int j=0; j<1200;j+=3){
+            for (int f=0; f<1200;f+=3){
                 //an error here to fix related to java.nio.BufferOverflowException
-                byteBuffer.putFloat(values[j]);
-                byteBuffer.putFloat(values[1+j]);
-                byteBuffer.putFloat(values[2+j]);
+                byteBuffer.putFloat(values[f]);
+                byteBuffer.putFloat(values[1+f]);
+                byteBuffer.putFloat(values[2+f]);
             }
             TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 401, 3}, DataType.FLOAT32);
             inputFeature0.loadBuffer(byteBuffer);
 
             // Runs model inference and gets result.
-            FallModel.Outputs outputs = model.process(inputFeature0);
+            FallModel1.Outputs outputs = model.process(inputFeature0);
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
             // Releases model resources if no longer used.
             float[] output = outputFeature0.getFloatArray();
             model.close();
-            TextView t = findViewById(R.id.txt);
+            //TextView t = findViewById(R.id.txt);
 
 
 
             //TextView tx = findViewById(R.id.text);
             if (output[0]<0.6){
 
-                t.setText(String.valueOf(output[0])+" Fall");
+                //t.setText(String.valueOf(output[0])+" Fall");
 
                 AlertSet();
 
                 sensorManager.unregisterListener(this);
                 startactivity();
-
-
-
-            } else {
-                t.setText(String.valueOf(output[0])+" ADL");
-
-
-
 
 
 
@@ -386,12 +384,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //isAlertset();
         vibrate = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         Timer timer = new Timer();
-        if (SettingsActivity.sw2checked()==true){
-            setVibrate();
-        }else vibrate.cancel();
-        if (SettingsActivity.sw3checked()==true){
-            addRingtone(player);
-        }else stopRingtone(player);
+        if (starting == true  | SettingsActivity.sw2checked()==false ){
+
+            vibrate.cancel();
+            starting = false;
+        }else setVibrate();
+        if (SettingsActivity.sw3checked()==false | starting == true){
+
+            stopRingtone(player);
+            starting = false;
+        }else addRingtone(player);
 
 
         builder = new AlertDialog.Builder(this);
@@ -426,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 dialogInterface.cancel();
 
 
-                sensorManager.registerListener(MainActivity.this, sensor,SensorManager.SENSOR_DELAY_NORMAL);
+                sensorManager.registerListener(MainActivity.this, sensor,SensorManager.SENSOR_DELAY_FASTEST);
 
 
             }
@@ -606,7 +608,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    public void callEmergence(){
+    public void callEmergence(View view){
 
         mAdapter = new Adapter(this, null);
 
@@ -720,4 +722,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
+
+
 }

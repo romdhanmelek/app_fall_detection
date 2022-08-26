@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class SettingsActivity extends AppCompatActivity {
 
     public  BottomNavigationView bottomNavigationView;
-    private static Switch sw1;
+
     private static Switch sw2;
     private static Switch sw3;
 
@@ -27,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.purple2)));
 
         bottomNavigationView=findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.setting1);
@@ -57,34 +59,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         });
 
-        sw1 = findViewById(R.id.switch1);
+
         sw2 = findViewById(R.id.switch2);
         sw3 = findViewById(R.id.switch3);
         SharedPreferences sharedPreferences = getSharedPreferences("Save", MODE_PRIVATE);
-        sw1.setChecked(sharedPreferences.getBoolean("value", false));
-        sw1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-                        if (sw1.isChecked()){
-                            Toast.makeText(SettingsActivity.this,"Sensor On",Toast.LENGTH_SHORT).show();
 
-                        }
-                        else{
-                            Toast.makeText(SettingsActivity.this,"Sensor Off",Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    }
-
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 1);
-                    }
-                }
-
-            } }) ;
 
 
         sw2.setChecked(sharedPreferences.getBoolean("value", false));
@@ -141,13 +120,7 @@ public class SettingsActivity extends AppCompatActivity {
         } ) ;
     }
 
-    public static Boolean sw1checked(){
-        if (sw1.isChecked()){
-            return true;
-        }else {
-            return false;
-        }
-    }
+
 
     public static Boolean sw2checked(){
         if (sw2.isChecked()){
